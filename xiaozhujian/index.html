@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小组件</title>
+    <title>贪吃蛇游戏</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -86,43 +86,26 @@
             font-size: 0.9rem;
         }
         
-        /* 主内容区域 */
-        .container {
-            display: flex;
-            width: 100%;
-            max-width: 1400px;
-            margin: 20px auto;
-            padding: 0 20px;
-            gap: 20px;
-            flex: 1;
-        }
-        
-        .left-panel {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        /* 游戏容器 */
+        .game-container {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 20px;
             gap: 20px;
         }
         
-        .right-panel {
-            flex: 1.5;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        header {
+        .game-header {
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             backdrop-filter: blur(10px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
         }
         
         h1 {
@@ -136,160 +119,88 @@
             opacity: 0.9;
         }
         
-        .network-container {
+        .game-area {
             position: relative;
             width: 100%;
+            max-width: 800px;
             height: 500px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
         
-        canvas {
-            display: block;
+        .snake_body {
+            list-style: none;
+            position: relative;
             width: 100%;
             height: 100%;
         }
         
-        .tooltip {
+        .cube {
             position: absolute;
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            max-width: 300px;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            z-index: 100;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 20px;
+            height: 20px;
+            background-color: #bff;
+            border-radius: 4px;
+            transition: all 0.1s ease;
         }
         
-        .tooltip h3 {
-            margin-bottom: 8px;
-            color: #d0ff00;
+        .cube.head {
+            background-color: rgb(4, 147, 250);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(4, 147, 250, 0.7);
         }
         
-        .person-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
-        
-        .person-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            width: calc(50% - 10px);
-            text-align: center;
-            transition: transform 0.3s, background 0.3s;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .person-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .person-avatar {
-            width: 60px;
-            height: 60px;
+        .food {
+            width: 20px;
+            height: 20px;
+            background-color: lightcoral;
+            position: absolute;
             border-radius: 50%;
-            margin: 0 auto 10px;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(240, 128, 128, 0.7);
+            z-index: 5;
         }
         
-        .person-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .person-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .person-role {
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-        
-        .detail-panel {
+        .game-info {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             backdrop-filter: blur(10px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .detail-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .detail-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .detail-avatar img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .detail-info h2 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-        
-        .detail-info .role {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .detail-description {
-            line-height: 1.6;
-            opacity: 0.9;
-        }
-        
-        .connections {
-            margin-top: 15px;
-        }
-        
-        .connections h3 {
-            margin-bottom: 10px;
-            color: #fdbb2d;
-        }
-        
-        .connection-list {
+            max-width: 800px;
             display: flex;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
             gap: 10px;
         }
         
-        .connection-tag {
+        .control-btn {
             background: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
         
         .instructions {
@@ -366,15 +277,7 @@
         }
         
         @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .left-panel, .right-panel {
-                width: 100%;
-            }
-            
-            .network-container {
+            .game-area {
                 height: 400px;
             }
             
@@ -384,10 +287,6 @@
         }
         
         @media (max-width: 768px) {
-            .person-card {
-                width: 100%;
-            }
-            
             h1 {
                 font-size: 1.8rem;
             }
@@ -401,6 +300,11 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
 </head>
@@ -410,9 +314,9 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-gamepad"></i>
                 </div>
-                <div class="logo-text">团队关系网络</div>
+                <div class="logo-text">贪吃蛇游戏</div>
             </div>
             <div class="nav-links">
                 <a href="https://605-bjfu.github.io/" class="nav-link">
@@ -437,357 +341,318 @@
         </div>
     </header>
     
-    <!-- 主内容区域 -->
-
+    <!-- 游戏区域 -->
+    <div class="game-container">
+        <div class="game-header">
+            <h1>贪吃蛇游戏</h1>
+            <p class="subtitle">使用方向键控制小蛇移动，吃到食物增加长度，碰到墙壁或自己游戏结束</p>
+        </div>
+        
+        <div class="game-area">
+            <ul class="snake_body">
+                <!-- 小蛇身体将通过JavaScript动态生成 -->
+            </ul>
+        </div>
+        
+        <div class="game-info">
+            <div class="score">得分: <span id="score">0</span></div>
+            <div class="controls">
+                <button class="control-btn" id="restartBtn">重新开始</button>
+                <button class="control-btn" id="pauseBtn">暂停</button>
+            </div>
+        </div>
+        
+        <p class="instructions">使用键盘方向键 ↑ ↓ ← → 控制小蛇移动</p>
+    </div>
     
     <!-- 全局页脚 -->
     <footer class="global-footer">
         <div class="footer-content">
             <div class="social-links">
-                </a>
                 <a href="https://github.com/605-bjfu" class="social-link">
                     <i class="fab fa-github"></i>
                 </a>
             </div>
             <div class="footer-text">
-                <p>© 2025 团队关系网络图 | 交互式关系网络展示系统</p>
+                <p>© 2025 贪吃蛇游戏 | 经典小游戏在线版</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // 人物数据 - 添加图片URL
-        const people = [
-            {
-                id: 1,
-                name: "张明",
-                role: "项目负责人",
-                description: "拥有10年项目管理经验，擅长团队协作与资源调配，曾主导多个大型项目成功交付。精通敏捷开发方法，善于沟通协调，能够有效推动项目进展并确保高质量交付。",
-                color: "#FF6B6B",
-                link: "#zhangming",
-                image: "https://i.pravatar.cc/150?img=1"
-            },
-            {
-                id: 2,
-                name: "李华",
-                role: "技术专家",
-                description: "资深全栈工程师，精通多种编程语言和框架，对系统架构有深入研究。擅长解决复杂技术问题，在性能优化和系统安全方面有丰富经验。",
-                color: "#4ECDC4",
-                link: "#lihua",
-                image: "https://i.pravatar.cc/150?img=2"
-            },
-            {
-                id: 3,
-                name: "王芳",
-                role: "设计师",
-                description: "UI/UX设计师，注重用户体验与视觉美感，曾获多个设计奖项。擅长用户研究和交互设计，能够将复杂需求转化为直观易用的界面。",
-                color: "#FFD166",
-                link: "#wangfang",
-                image: "https://i.pravatar.cc/150?img=3"
-            },
-            {
-                id: 4,
-                name: "赵强",
-                role: "市场总监",
-                description: "市场营销专家，擅长品牌策划与市场拓展，拥有广泛的行业资源。精通数字营销策略，曾成功主导多个品牌从零到一的市场建设。",
-                color: "#6A0572",
-                link: "#zhaoqiang",
-                image: "https://i.pravatar.cc/150?img=4"
-            },
-            {
-                id: 5,
-                name: "刘洋",
-                role: "数据分析师",
-                description: "数据科学家，精通机器学习与统计分析，擅长从数据中挖掘商业价值。具备丰富的数据可视化经验，能够将复杂数据转化为直观洞察。",
-                color: "#1A936F",
-                link: "#liuyang",
-                image: "https://i.pravatar.cc/150?img=5"
-            },
-            {
-                id: 6,
-                name: "陈静",
-                role: "运营经理",
-                description: "运营管理专家，擅长用户增长与社区运营，有丰富的产品运营经验。精通A/B测试和转化率优化，能够有效提升产品用户活跃度。",
-                color: "#118AB2",
-                link: "#chenjing",
-                image: "https://i.pravatar.cc/150?img=6"
-            },
-            {
-                id: 7,
-                name: "杨超",
-                role: "产品经理",
-                description: "产品战略规划师，擅长需求分析与产品设计，对市场趋势有敏锐洞察力。精通产品生命周期管理，能够协调多方资源推动产品迭代。",
-                color: "#EF476F",
-                link: "#yangchao",
-                image: "https://i.pravatar.cc/150?img=7"
-            }
+        // 获取DOM元素
+        const gameArea = document.querySelector('.game-area');
+        const snakeBody = document.querySelector('.snake_body');
+        const scoreElement = document.getElementById('score');
+        const restartBtn = document.getElementById('restartBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+
+        // 游戏状态变量
+        let snake_arr = [
+            { id: 0, left: 100, top: 100, move_direction: 'r' },
+            { id: 1, left: 80, top: 100 },
+            { id: 2, left: 60, top: 100 }
         ];
+        let gameRunning = true;
+        let gamePaused = false;
+        let score = 0;
+        let autoMove;
+        let foodElement = null;
 
-        // 连接关系数据
-        const connections = [
-            { source: 1, target: 2 },
-            { source: 1, target: 3 },
-            { source: 1, target: 4 },
-            { source: 2, target: 3 },
-            { source: 2, target: 5 },
-            { source: 3, target: 6 },
-            { source: 4, target: 5 },
-            { source: 4, target: 7 },
-            { source: 5, target: 6 },
-            { source: 6, target: 7 },
-            { source: 1, target: 5 },
-            { source: 1, target: 6 },
-            { source: 1, target: 7 },
-            { source: 2, target: 4 },
-            { source: 2, target: 6 },
-            { source: 2, target: 7 },
-            { source: 3, target: 4 },
-            { source: 3, target: 5 },
-            { source: 3, target: 7 },
-            { source: 4, target: 6 },
-            { source: 5, target: 7 },
-
-        ];
-
-        // 初始化Canvas
-        const canvas = document.getElementById('networkCanvas');
-        const ctx = canvas.getContext('2d');
-        const tooltip = document.getElementById('tooltip');
-        const personList = document.getElementById('personList');
-        const detailPanel = document.getElementById('detailPanel');
-        const detailAvatar = document.getElementById('detailAvatarImg');
-        const detailName = document.getElementById('detailName');
-        const detailRole = document.getElementById('detailRole');
-        const detailDescription = document.getElementById('detailDescription');
-        const connectionList = document.getElementById('connectionList');
-
-        // 预加载图片
-        const imagePromises = people.map(person => {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                    person.img = img;
-                    resolve(img);
-                };
-                img.onerror = reject;
-                img.src = person.image;
-            });
-        });
-
-        // 设置Canvas尺寸
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            drawNetwork();
+        // 初始化游戏
+        function initGame() {
+            // 清除现有元素
+            snakeBody.innerHTML = '';
+            if (foodElement) {
+                foodElement.remove();
+                foodElement = null;
+            }
+            
+            // 重置游戏状态
+            snake_arr = [
+                { id: 0, left: 100, top: 100, move_direction: 'r' },
+                { id: 1, left: 80, top: 100 },
+                { id: 2, left: 60, top: 100 }
+            ];
+            score = 0;
+            scoreElement.textContent = score;
+            gameRunning = true;
+            gamePaused = false;
+            pauseBtn.textContent = '暂停';
+            
+            // 渲染初始小蛇
+            renderSnake();
+            
+            // 生成食物
+            createFood();
+            
+            // 开始游戏循环
+            if (autoMove) clearInterval(autoMove);
+            autoMove = setInterval(snakeMove, 150);
+            
+            // 开始检测游戏状态
+            checkGameStatus();
         }
 
-        // 绘制网络图
-        function drawNetwork() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 计算节点位置（圆形布局）
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = Math.min(canvas.width, canvas.height) * 0.35;
-            
-            // 绘制连接线
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            ctx.lineWidth = 2;
-            
-            connections.forEach(conn => {
-                const source = people.find(p => p.id === conn.source);
-                const target = people.find(p => p.id === conn.target);
+        // 渲染小蛇
+        function renderSnake() {
+            // 从后往前向ul里面添加li标签
+            for (let i = snake_arr.length - 1; i >= 0; i--) {
+                let li = document.createElement('li');
+                li.classList.add('cube');
                 
-                if (source && target) {
-                    const sourceAngle = (source.id - 1) * (2 * Math.PI / people.length);
-                    const targetAngle = (target.id - 1) * (2 * Math.PI / people.length);
-                    
-                    const sourceX = centerX + radius * Math.cos(sourceAngle);
-                    const sourceY = centerY + radius * Math.sin(sourceAngle);
-                    const targetX = centerX + radius * Math.cos(targetAngle);
-                    const targetY = centerY + radius * Math.sin(targetAngle);
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(sourceX, sourceY);
-                    ctx.lineTo(targetX, targetY);
-                    ctx.stroke();
-                }
-            });
-            
-            // 绘制节点
-            people.forEach(person => {
-                const angle = (person.id - 1) * (2 * Math.PI / people.length);
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
-                
-                // 保存节点位置用于交互检测
-                person.x = x;
-                person.y = y;
-                
-                // 绘制节点外圈光晕
-                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 30);
-                gradient.addColorStop(0, person.color);
-                gradient.addColorStop(1, 'transparent');
-                
-                ctx.beginPath();
-                ctx.arc(x, y, 30, 0, Math.PI * 2);
-                ctx.fillStyle = gradient;
-                ctx.fill();
-                
-                // 绘制节点图片
-                if (person.img) {
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(x, y, 20, 0, Math.PI * 2);
-                    ctx.closePath();
-                    ctx.clip();
-                    
-                    ctx.drawImage(person.img, x - 20, y - 20, 40, 40);
-                    ctx.restore();
-                } else {
-                    // 备用：绘制纯色节点
-                    ctx.beginPath();
-                    ctx.arc(x, y, 20, 0, Math.PI * 2);
-                    ctx.fillStyle = person.color;
-                    ctx.fill();
-                    
-                    // 绘制节点内的字母
-                    ctx.fillStyle = 'white';
-                    ctx.font = 'bold 16px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(person.name.charAt(0), x, y);
+                // 第一个是小蛇的头部
+                if (snake_arr[i].id === 0) {
+                    li.classList.add('head');
                 }
                 
-                // 绘制节点边框
-                ctx.beginPath();
-                ctx.arc(x, y, 20, 0, Math.PI * 2);
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            });
+                li.style.left = snake_arr[i].left + 'px';
+                li.style.top = snake_arr[i].top + 'px';
+                snakeBody.appendChild(li);
+            }
         }
 
-        // 检测鼠标位置是否在节点上
-        function getNodeAtPosition(x, y) {
-            return people.find(person => {
-                const dx = person.x - x;
-                const dy = person.y - y;
-                return Math.sqrt(dx * dx + dy * dy) < 20;
-            });
+        // 小蛇移动
+        function snakeMove() {
+            if (!gameRunning || gamePaused) return;
+            
+            let direction = snake_arr[0].move_direction;
+            
+            // 移动身体部分
+            for (let i = snake_arr.length - 1; i >= 1; i--) {
+                snake_arr[i].left = snake_arr[i - 1].left;
+                snake_arr[i].top = snake_arr[i - 1].top;
+            }
+            
+            // 移动头部
+            switch (direction) {
+                case 'l':
+                    snake_arr[0].left -= 20;
+                    break;
+                case 'r':
+                    snake_arr[0].left += 20;
+                    break;
+                case 'u':
+                    snake_arr[0].top -= 20;
+                    break;
+                case 'd':
+                    snake_arr[0].top += 20;
+                    break;
+            }
+            
+            // 重新渲染小蛇
+            snakeBody.innerHTML = '';
+            renderSnake();
+            
+            // 检查是否吃到食物
+            checkFoodCollision();
         }
 
-        // 更新详细信息面板
-        function updateDetailPanel(person) {
-            detailAvatar.src = person.image;
-            detailAvatar.alt = person.name;
-            detailName.textContent = person.name;
-            detailRole.textContent = person.role;
-            detailDescription.textContent = person.description;
+        // 创建食物
+        function createFood() {
+            if (foodElement) {
+                foodElement.remove();
+            }
             
-            // 更新关联人员
-            const relatedConnections = connections.filter(conn => 
-                conn.source === person.id || conn.target === person.id
-            );
+            // 计算可用的位置
+            const maxLeft = Math.floor(gameArea.offsetWidth / 20) - 1;
+            const maxTop = Math.floor(gameArea.offsetHeight / 20) - 1;
             
-            const relatedPeople = new Set();
-            relatedConnections.forEach(conn => {
-                if (conn.source === person.id) {
-                    const targetPerson = people.find(p => p.id === conn.target);
-                    if (targetPerson) relatedPeople.add(targetPerson.name);
-                } else {
-                    const sourcePerson = people.find(p => p.id === conn.source);
-                    if (sourcePerson) relatedPeople.add(sourcePerson.name);
+            let validPosition = false;
+            let foodLeft, foodTop;
+            
+            // 确保食物不会生成在小蛇身上
+            while (!validPosition) {
+                foodLeft = Math.floor(Math.random() * maxLeft) * 20;
+                foodTop = Math.floor(Math.random() * maxTop) * 20;
+                
+                validPosition = true;
+                for (let segment of snake_arr) {
+                    if (segment.left === foodLeft && segment.top === foodTop) {
+                        validPosition = false;
+                        break;
+                    }
                 }
-            });
+            }
             
-            connectionList.innerHTML = '';
-            relatedPeople.forEach(name => {
-                const tag = document.createElement('div');
-                tag.className = 'connection-tag';
-                tag.textContent = name;
-                connectionList.appendChild(tag);
+            foodElement = document.createElement('div');
+            foodElement.classList.add('food');
+            foodElement.style.left = foodLeft + 'px';
+            foodElement.style.top = foodTop + 'px';
+            gameArea.appendChild(foodElement);
+        }
+
+        // 检查是否吃到食物
+        function checkFoodCollision() {
+            if (!foodElement) return;
+            
+            const head = snake_arr[0];
+            const foodLeft = parseInt(foodElement.style.left);
+            const foodTop = parseInt(foodElement.style.top);
+            
+            if (head.left === foodLeft && head.top === foodTop) {
+                // 吃到食物，增加分数和身体长度
+                score += 10;
+                scoreElement.textContent = score;
+                addBody();
+                createFood();
+            }
+        }
+
+        // 增加身体长度
+        function addBody() {
+            const lastSegment = snake_arr[snake_arr.length - 1];
+            snake_arr.push({
+                id: snake_arr.length,
+                left: lastSegment.left,
+                top: lastSegment.top
             });
         }
 
-        // 处理Canvas鼠标移动事件
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const person = getNodeAtPosition(x, y);
-            
-            if (person) {
-                canvas.style.cursor = 'pointer';
-                tooltip.innerHTML = `
-                    <h3>${person.name}</h3>
-                    <p><strong>职位:</strong> ${person.role}</p>
-                    <p>${person.description}</p>
-                `;
-                tooltip.style.opacity = 1;
-                tooltip.style.left = (e.pageX + 15) + 'px';
-                tooltip.style.top = (e.pageY - 15) + 'px';
-            } else {
-                canvas.style.cursor = 'default';
-                tooltip.style.opacity = 0;
+        // 检查游戏状态
+        function checkGameStatus() {
+            const checkInterval = setInterval(() => {
+                if (!gameRunning) {
+                    clearInterval(checkInterval);
+                    return;
+                }
+                
+                const head = snake_arr[0];
+                
+                // 检查是否撞墙
+                if (
+                    head.left < 0 || 
+                    head.left >= gameArea.offsetWidth || 
+                    head.top < 0 || 
+                    head.top >= gameArea.offsetHeight
+                ) {
+                    endGame('撞墙了！游戏结束！');
+                    clearInterval(checkInterval);
+                    return;
+                }
+                
+                // 检查是否撞到自己
+                for (let i = 1; i < snake_arr.length; i++) {
+                    if (head.left === snake_arr[i].left && head.top === snake_arr[i].top) {
+                        endGame('咬到自己了！游戏结束！');
+                        clearInterval(checkInterval);
+                        return;
+                    }
+                }
+            }, 100);
+        }
+
+        // 结束游戏
+        function endGame(message) {
+            gameRunning = false;
+            clearInterval(autoMove);
+            setTimeout(() => {
+                alert(message + ' 最终得分: ' + score);
+            }, 100);
+        }
+
+        // 方向控制
+        let lock = false;
+        function changeDirection(key) {
+            if (!lock && gameRunning && !gamePaused) {
+                lock = true;
+                
+                const currentDirection = snake_arr[0].move_direction;
+                let newDirection;
+                
+                switch (key) {
+                    case 'ArrowLeft':
+                        newDirection = 'l';
+                        break;
+                    case 'ArrowRight':
+                        newDirection = 'r';
+                        break;
+                    case 'ArrowUp':
+                        newDirection = 'u';
+                        break;
+                    case 'ArrowDown':
+                        newDirection = 'd';
+                        break;
+                    default:
+                        lock = false;
+                        return;
+                }
+                
+                // 防止直接反向移动
+                if (
+                    (currentDirection === 'l' && newDirection !== 'r') ||
+                    (currentDirection === 'r' && newDirection !== 'l') ||
+                    (currentDirection === 'u' && newDirection !== 'd') ||
+                    (currentDirection === 'd' && newDirection !== 'u')
+                ) {
+                    snake_arr[0].move_direction = newDirection;
+                }
+                
+                setTimeout(() => {
+                    lock = false;
+                }, 50);
+            }
+        }
+
+        // 事件监听
+        window.addEventListener('keydown', (e) => {
+            if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                e.preventDefault(); // 防止方向键滚动页面
+                changeDirection(e.key);
             }
         });
 
-        // 处理Canvas点击事件
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const person = getNodeAtPosition(x, y);
-            
-            if (person) {
-                updateDetailPanel(person);
-                // 在实际应用中，这里应该跳转到对应的个人介绍页面
-                // window.location.href = person.link;
-            }
-        });
-
-        // 生成人物卡片
-        function generatePersonCards() {
-            personList.innerHTML = '';
-            
-            people.forEach(person => {
-                const card = document.createElement('div');
-                card.className = 'person-card';
-                card.innerHTML = `
-                    <div class="person-avatar">
-                        <img src="${person.image}" alt="${person.name}">
-                    </div>
-                    <div class="person-name">${person.name}</div>
-                    <div class="person-role">${person.role}</div>
-                `;
-                
-                card.addEventListener('click', () => {
-                    updateDetailPanel(person);
-                    // 在实际应用中，这里应该跳转到对应的个人介绍页面
-                    // window.location.href = person.link;
-                });
-                
-                personList.appendChild(card);
-            });
-        }
-
-        // 初始化
-        Promise.all(imagePromises).then(() => {
-            resizeCanvas();
-            generatePersonCards();
-            // 默认显示第一个人物的详细信息
-            updateDetailPanel(people[0]);
-        }).catch(error => {
-            console.error('图片加载失败:', error);
-            resizeCanvas();
-            generatePersonCards();
-            updateDetailPanel(people[0]);
-        });
+        restartBtn.addEventListener('click', initGame);
         
-        window.addEventListener('resize', resizeCanvas);
+        pauseBtn.addEventListener('click', () => {
+            if (gameRunning) {
+                gamePaused = !gamePaused;
+                pauseBtn.textContent = gamePaused ? '继续' : '暂停';
+            }
+        });
+
+        // 初始化游戏
+        initGame();
     </script>
 </body>
 </html>
