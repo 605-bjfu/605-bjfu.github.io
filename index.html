@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>七人关系网络图</title>
+    <title>七人关系网络图 - 使用人物图片</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,21 +14,110 @@
         }
         
         body {
-            background: linear-gradient(135deg, #23ad5f, #397ed7);
+            background: linear-gradient(135deg, #02ff52, #4c2dfd);
             color: white;
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
         
-        .container {
-            max-width: 1200px;
+        /* 全局页眉样式 */
+        .global-header {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: #bf00ff;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .nav-icon {
+            font-size: 1.5rem;
+            color: #fd2dd3;
+        }
+        
+        .nav-text {
+            font-size: 0.9rem;
+        }
+        
+        /* 主内容区域 */
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .right-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 40px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
@@ -36,30 +126,29 @@
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
         }
         
         .network-container {
             position: relative;
-            width: 50%;
-            height: 900px;
+            width: 100%;
+            height: 500px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            margin-bottom: 30px;
         }
         
         canvas {
             display: block;
-            width: 80%;
+            width: 100%;
             height: 100%;
         }
         
@@ -81,29 +170,21 @@
         
         .tooltip h3 {
             margin-bottom: 8px;
-            color: #fdbb2d;
-        }
-        
-        .instructions {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 1.1rem;
-            opacity: 0.8;
+            color: #d0ff00;
         }
         
         .person-list {
             display: flex;
             flex-wrap: wrap;
+            gap: 15px;
             justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
         }
         
         .person-card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 15px;
-            width: 100px;
+            width: calc(50% - 10px);
             text-align: center;
             transition: transform 0.3s, background 0.3s;
             cursor: pointer;
@@ -117,16 +198,18 @@
         }
         
         .person-avatar {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             margin: 0 auto 10px;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .person-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .person-name {
@@ -135,106 +218,351 @@
         }
         
         .person-role {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             opacity: 0.8;
         }
         
-        footer {
+        .detail-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .detail-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .detail-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .detail-info .role {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .detail-description {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .connections {
+            margin-top: 15px;
+        }
+        
+        .connections h3 {
+            margin-bottom: 10px;
+            color: #fdbb2d;
+        }
+        
+        .connection-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .connection-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
+            margin-top: 10px;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* 全局页脚样式 */
+        .global-footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 25px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: #fdbb2d;
+        }
+        
+        .footer-text {
+            text-align: center;
             opacity: 0.7;
             font-size: 0.9rem;
         }
         
-        @media (max-width: 768px) {
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background: #fdbb2d;
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .left-panel, .right-panel {
+                width: 100%;
+            }
+            
             .network-container {
                 height: 400px;
             }
             
+            .nav-links {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .person-card {
+                width: 100%;
+            }
+            
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
+    <!-- 全局页眉 -->
+    <header class="global-header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="logo-text">团队关系网络</div>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">首页</div>
+                </a>
+                <a href="#" class="nav-link">
+                    <div class="nav-icon">
+                        <i class="fa fa-history"></i>
+                    </div>
+                    <div class="nav-text">时间轴</div>
+                </a>
+                <a href="#" class="nav-link">
+                    <div class="nav-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="nav-text">小组件</div>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 主内容区域 -->
     <div class="container">
-
-        
-        <div class="network-container">
-            <canvas id="networkCanvas"></canvas>
-            <div class="tooltip" id="tooltip"></div>
+        <div class="left-panel">
+            <header>
+                <h1>七人关系网络图</h1>
+                <p class="subtitle">点击节点查看详细信息，鼠标悬停查看简介</p>
+            </header>
+            
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-header">
+                    <div class="detail-avatar" id="detailAvatar">
+                        <img id="detailAvatarImg" src="https://i.pravatar.cc/150?img=1" alt="张明">
+                    </div>
+                    <div class="detail-info">
+                        <h2 id="detailName">张明</h2>
+                        <div class="role" id="detailRole">项目负责人</div>
+                    </div>
+                </div>
+                <div class="detail-description" id="detailDescription">
+                    拥有10年项目管理经验，擅长团队协作与资源调配，曾主导多个大型项目成功交付。精通敏捷开发方法，善于沟通协调，能够有效推动项目进展并确保高质量交付。
+                </div>
+                <div class="connections">
+                    <h3>关联人员</h3>
+                    <div class="connection-list" id="connectionList">
+                        <div class="connection-tag">李华</div>
+                        <div class="connection-tag">王芳</div>
+                        <div class="connection-tag">赵强</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="instructions">点击上方节点或下方卡片可查看人物详细信息</p>
+            
+            <div class="person-list" id="personList">
+                <!-- 人物卡片将通过JavaScript动态生成 -->
+            </div>
         </div>
         
-        
-        <div class="person-list" id="personList">
-            <!-- 人物卡片将通过JavaScript动态生成 -->
+        <div class="right-panel">
+            <div class="network-container">
+                <canvas id="networkCanvas"></canvas>
+                <div class="tooltip" id="tooltip"></div>
+            </div>
         </div>
-        
-        <footer>
-            <p>test | test</p>
-        </footer>
     </div>
+    
+    <!-- 全局页脚 -->
+    <footer class="global-footer">
+        <div class="footer-content">
+            <div class="social-links">
+                </a>
+                <a href="https://github.com/605-bjfu" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+            <div class="footer-text">
+                <p>© 2025 团队关系网络图 | 交互式关系网络展示系统</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // 人物数据
+        // 人物数据 - 添加图片URL
         const people = [
             {
                 id: 1,
                 name: "张明",
                 role: "项目负责人",
-                description: "拥有10年项目管理经验，擅长团队协作与资源调配，曾主导多个大型项目成功交付。",
+                description: "拥有10年项目管理经验，擅长团队协作与资源调配，曾主导多个大型项目成功交付。精通敏捷开发方法，善于沟通协调，能够有效推动项目进展并确保高质量交付。",
                 color: "#FF6B6B",
-                link: "#zhangming"
+                link: "#zhangming",
+                image: "https://i.pravatar.cc/150?img=1"
             },
             {
                 id: 2,
                 name: "李华",
                 role: "技术专家",
-                description: "资深全栈工程师，精通多种编程语言和框架，对系统架构有深入研究。",
+                description: "资深全栈工程师，精通多种编程语言和框架，对系统架构有深入研究。擅长解决复杂技术问题，在性能优化和系统安全方面有丰富经验。",
                 color: "#4ECDC4",
-                link: "#lihua"
+                link: "#lihua",
+                image: "https://i.pravatar.cc/150?img=2"
             },
             {
                 id: 3,
                 name: "王芳",
                 role: "设计师",
-                description: "UI/UX设计师，注重用户体验与视觉美感，曾获多个设计奖项。",
+                description: "UI/UX设计师，注重用户体验与视觉美感，曾获多个设计奖项。擅长用户研究和交互设计，能够将复杂需求转化为直观易用的界面。",
                 color: "#FFD166",
-                link: "#wangfang"
+                link: "#wangfang",
+                image: "https://i.pravatar.cc/150?img=3"
             },
             {
                 id: 4,
                 name: "赵强",
                 role: "市场总监",
-                description: "市场营销专家，擅长品牌策划与市场拓展，拥有广泛的行业资源。",
+                description: "市场营销专家，擅长品牌策划与市场拓展，拥有广泛的行业资源。精通数字营销策略，曾成功主导多个品牌从零到一的市场建设。",
                 color: "#6A0572",
-                link: "#zhaoqiang"
+                link: "#zhaoqiang",
+                image: "https://i.pravatar.cc/150?img=4"
             },
             {
                 id: 5,
                 name: "刘洋",
                 role: "数据分析师",
-                description: "数据科学家，精通机器学习与统计分析，擅长从数据中挖掘商业价值。",
+                description: "数据科学家，精通机器学习与统计分析，擅长从数据中挖掘商业价值。具备丰富的数据可视化经验，能够将复杂数据转化为直观洞察。",
                 color: "#1A936F",
-                link: "#liuyang"
+                link: "#liuyang",
+                image: "https://i.pravatar.cc/150?img=5"
             },
             {
                 id: 6,
                 name: "陈静",
                 role: "运营经理",
-                description: "运营管理专家，擅长用户增长与社区运营，有丰富的产品运营经验。",
+                description: "运营管理专家，擅长用户增长与社区运营，有丰富的产品运营经验。精通A/B测试和转化率优化，能够有效提升产品用户活跃度。",
                 color: "#118AB2",
-                link: "#chenjing"
+                link: "#chenjing",
+                image: "https://i.pravatar.cc/150?img=6"
             },
             {
                 id: 7,
                 name: "杨超",
                 role: "产品经理",
-                description: "产品战略规划师，擅长需求分析与产品设计，对市场趋势有敏锐洞察力。",
+                description: "产品战略规划师，擅长需求分析与产品设计，对市场趋势有敏锐洞察力。精通产品生命周期管理，能够协调多方资源推动产品迭代。",
                 color: "#EF476F",
-                link: "#yangchao"
+                link: "#yangchao",
+                image: "https://i.pravatar.cc/150?img=7"
             }
         ];
 
@@ -243,24 +571,25 @@
             { source: 1, target: 2 },
             { source: 1, target: 3 },
             { source: 1, target: 4 },
+            { source: 2, target: 3 },
+            { source: 2, target: 5 },
+            { source: 3, target: 6 },
+            { source: 4, target: 5 },
+            { source: 4, target: 7 },
+            { source: 5, target: 6 },
+            { source: 6, target: 7 },
             { source: 1, target: 5 },
             { source: 1, target: 6 },
             { source: 1, target: 7 },
-            { source: 2, target: 3 },
-            { source: 2, target: 5 },
             { source: 2, target: 4 },
             { source: 2, target: 6 },
-            { source: 2, target: 7 },            
-            { source: 3, target: 6 },
+            { source: 2, target: 7 },
             { source: 3, target: 4 },
             { source: 3, target: 5 },
             { source: 3, target: 7 },
-            { source: 4, target: 5 },
-            { source: 4, target: 7 },
             { source: 4, target: 6 },
             { source: 5, target: 7 },
-            { source: 5, target: 6 },
-            { source: 6, target: 7 }
+
         ];
 
         // 初始化Canvas
@@ -268,6 +597,25 @@
         const ctx = canvas.getContext('2d');
         const tooltip = document.getElementById('tooltip');
         const personList = document.getElementById('personList');
+        const detailPanel = document.getElementById('detailPanel');
+        const detailAvatar = document.getElementById('detailAvatarImg');
+        const detailName = document.getElementById('detailName');
+        const detailRole = document.getElementById('detailRole');
+        const detailDescription = document.getElementById('detailDescription');
+        const connectionList = document.getElementById('connectionList');
+
+        // 预加载图片
+        const imagePromises = people.map(person => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    person.img = img;
+                    resolve(img);
+                };
+                img.onerror = reject;
+                img.src = person.image;
+            });
+        });
 
         // 设置Canvas尺寸
         function resizeCanvas() {
@@ -329,11 +677,30 @@
                 ctx.fillStyle = gradient;
                 ctx.fill();
                 
-                // 绘制节点
-                ctx.beginPath();
-                ctx.arc(x, y, 20, 0, Math.PI * 2);
-                ctx.fillStyle = person.color;
-                ctx.fill();
+                // 绘制节点图片
+                if (person.img) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(x, y, 20, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
+                    
+                    ctx.drawImage(person.img, x - 20, y - 20, 40, 40);
+                    ctx.restore();
+                } else {
+                    // 备用：绘制纯色节点
+                    ctx.beginPath();
+                    ctx.arc(x, y, 20, 0, Math.PI * 2);
+                    ctx.fillStyle = person.color;
+                    ctx.fill();
+                    
+                    // 绘制节点内的字母
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(person.name.charAt(0), x, y);
+                }
                 
                 // 绘制节点边框
                 ctx.beginPath();
@@ -341,13 +708,6 @@
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = 2;
                 ctx.stroke();
-                
-                // 绘制节点内的字母
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(person.name.charAt(0), x, y);
             });
         }
 
@@ -357,6 +717,39 @@
                 const dx = person.x - x;
                 const dy = person.y - y;
                 return Math.sqrt(dx * dx + dy * dy) < 20;
+            });
+        }
+
+        // 更新详细信息面板
+        function updateDetailPanel(person) {
+            detailAvatar.src = person.image;
+            detailAvatar.alt = person.name;
+            detailName.textContent = person.name;
+            detailRole.textContent = person.role;
+            detailDescription.textContent = person.description;
+            
+            // 更新关联人员
+            const relatedConnections = connections.filter(conn => 
+                conn.source === person.id || conn.target === person.id
+            );
+            
+            const relatedPeople = new Set();
+            relatedConnections.forEach(conn => {
+                if (conn.source === person.id) {
+                    const targetPerson = people.find(p => p.id === conn.target);
+                    if (targetPerson) relatedPeople.add(targetPerson.name);
+                } else {
+                    const sourcePerson = people.find(p => p.id === conn.source);
+                    if (sourcePerson) relatedPeople.add(sourcePerson.name);
+                }
+            });
+            
+            connectionList.innerHTML = '';
+            relatedPeople.forEach(name => {
+                const tag = document.createElement('div');
+                tag.className = 'connection-tag';
+                tag.textContent = name;
+                connectionList.appendChild(tag);
             });
         }
 
@@ -393,8 +786,8 @@
             const person = getNodeAtPosition(x, y);
             
             if (person) {
+                updateDetailPanel(person);
                 // 在实际应用中，这里应该跳转到对应的个人介绍页面
-                alert(`即将跳转到 ${person.name} 的个人介绍页面\n链接: ${person.link}`);
                 // window.location.href = person.link;
             }
         });
@@ -407,16 +800,16 @@
                 const card = document.createElement('div');
                 card.className = 'person-card';
                 card.innerHTML = `
-                    <div class="person-avatar" style="background: ${person.color}">
-                        ${person.name.charAt(0)}
+                    <div class="person-avatar">
+                        <img src="${person.image}" alt="${person.name}">
                     </div>
                     <div class="person-name">${person.name}</div>
                     <div class="person-role">${person.role}</div>
                 `;
                 
                 card.addEventListener('click', () => {
+                    updateDetailPanel(person);
                     // 在实际应用中，这里应该跳转到对应的个人介绍页面
-                    alert(`即将跳转到 ${person.name} 的个人介绍页面\n链接: ${person.link}`);
                     // window.location.href = person.link;
                 });
                 
@@ -425,9 +818,16 @@
         }
 
         // 初始化
-        window.addEventListener('load', () => {
+        Promise.all(imagePromises).then(() => {
             resizeCanvas();
             generatePersonCards();
+            // 默认显示第一个人物的详细信息
+            updateDetailPanel(people[0]);
+        }).catch(error => {
+            console.error('图片加载失败:', error);
+            resizeCanvas();
+            generatePersonCards();
+            updateDetailPanel(people[0]);
         });
         
         window.addEventListener('resize', resizeCanvas);
