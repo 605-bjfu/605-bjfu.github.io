@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>贪吃蛇游戏</title>
+    <title>小组件</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -19,6 +19,17 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        /* 粒子背景 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
         
         /* 全局页眉样式 */
@@ -28,6 +39,12 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(-100%);
+            animation: slideDown 0.8s ease-out 0.5s forwards;
+        }
+        
+        @keyframes slideDown {
+            to { transform: translateY(0); }
         }
         
         .header-content {
@@ -50,6 +67,11 @@
             color: #bf00ff;
         }
         
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
         .logo-text {
             font-size: 1.8rem;
             font-weight: bold;
@@ -70,6 +92,23 @@
             transition: all 0.3s;
             padding: 10px;
             border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
         }
         
         .nav-link:hover {
@@ -95,6 +134,16 @@
             flex: 1;
             padding: 20px;
             gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease-out 0.8s forwards;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .game-header {
@@ -106,6 +155,25 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 800px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 1000s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
         h1 {
@@ -123,13 +191,19 @@
             position: relative;
             width: 100%;
             max-width: 800px;
-            height: 500px;
+            height: 400px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(5px);
             border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .game-area:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
         }
         
         .snake_body {
@@ -145,13 +219,20 @@
             height: 20px;
             background-color: #bff;
             border-radius: 4px;
-            transition: all 0.1s ease;
+            transition: all 0.15s ease;
+            box-shadow: 0 0 5px rgba(191, 255, 255, 0.7);
         }
         
         .cube.head {
             background-color: rgb(4, 147, 250);
             z-index: 10;
             box-shadow: 0 0 10px rgba(4, 147, 250, 0.7);
+            animation: headPulse 2s infinite alternate;
+        }
+        
+        @keyframes headPulse {
+            from { box-shadow: 0 0 5px rgba(4, 147, 250, 0.7); }
+            to { box-shadow: 0 0 15px rgba(4, 147, 250, 1); }
         }
         
         .food {
@@ -162,6 +243,12 @@
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(240, 128, 128, 0.7);
             z-index: 5;
+            animation: foodPulse 1.5s infinite alternate, rotate 3s infinite linear;
+        }
+        
+        @keyframes foodPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
         }
         
         .game-info {
@@ -175,11 +262,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .game-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
         
         .score {
             font-size: 1.5rem;
             font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .score.highlight {
+            transform: scale(1.2);
+            color: #fdbb2d;
         }
         
         .controls {
@@ -196,6 +295,23 @@
             cursor: pointer;
             transition: all 0.3s;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .control-btn:hover::before {
+            left: 100%;
         }
         
         .control-btn:hover {
@@ -208,6 +324,61 @@
             margin-top: 10px;
             font-size: 1rem;
             opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        /* 游戏结束遮罩 */
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s;
+        }
+        
+        .game-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .overlay-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.5s;
+        }
+        
+        .game-overlay.active .overlay-content {
+            transform: scale(1);
+        }
+        
+        .overlay-content h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #fdbb2d;
+        }
+        
+        .overlay-content p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
         }
         
         /* 全局页脚样式 */
@@ -218,6 +389,12 @@
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: 20px;
+            transform: translateY(100%);
+            animation: slideUp 0.8s ease-out 1s forwards;
+        }
+        
+        @keyframes slideUp {
+            to { transform: translateY(0); }
         }
         
         .footer-content {
@@ -273,7 +450,7 @@
         
         .social-link:hover {
             background: #fdbb2d;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.1);
         }
         
         @media (max-width: 1024px) {
@@ -309,6 +486,9 @@
     </style>
 </head>
 <body>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
     <!-- 全局页眉 -->
     <header class="global-header">
         <div class="header-content">
@@ -316,7 +496,7 @@
                 <div class="logo-icon">
                     <i class="fas fa-gamepad"></i>
                 </div>
-                <div class="logo-text">贪吃蛇游戏</div>
+                <div class="logo-text">605</div>
             </div>
             <div class="nav-links">
                 <a href="https://605-bjfu.github.io/" class="nav-link">
@@ -349,6 +529,15 @@
         </div>
         
         <div class="game-area">
+            <!-- 游戏结束遮罩 -->
+            <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-content">
+                    <h2 id="overlayTitle">游戏结束</h2>
+                    <p id="overlayMessage">撞墙了！游戏结束！</p>
+                    <button class="control-btn" id="overlayRestartBtn">重新开始</button>
+                </div>
+            </div>
+            
             <ul class="snake_body">
                 <!-- 小蛇身体将通过JavaScript动态生成 -->
             </ul>
@@ -374,18 +563,60 @@
                 </a>
             </div>
             <div class="footer-text">
-                <p>© 2025 贪吃蛇游戏 | 经典小游戏在线版</p>
+                <p>© 2025 605 | 北京林业大学2025级宿舍</p>
             </div>
         </div>
     </footer>
 
+    <!-- 引入粒子库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script>
+        // 初始化粒子背景
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 60, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ffffff",
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                }
+            }
+        });
+
         // 获取DOM元素
         const gameArea = document.querySelector('.game-area');
         const snakeBody = document.querySelector('.snake_body');
         const scoreElement = document.getElementById('score');
         const restartBtn = document.getElementById('restartBtn');
         const pauseBtn = document.getElementById('pauseBtn');
+        const gameOverlay = document.getElementById('gameOverlay');
+        const overlayTitle = document.getElementById('overlayTitle');
+        const overlayMessage = document.getElementById('overlayMessage');
+        const overlayRestartBtn = document.getElementById('overlayRestartBtn');
 
         // 游戏状态变量
         let snake_arr = [
@@ -407,6 +638,9 @@
                 foodElement.remove();
                 foodElement = null;
             }
+            
+            // 隐藏游戏结束遮罩
+            gameOverlay.classList.remove('active');
             
             // 重置游戏状态
             snake_arr = [
@@ -532,8 +766,15 @@
             
             if (head.left === foodLeft && head.top === foodTop) {
                 // 吃到食物，增加分数和身体长度
-                score += 10;
+                score += 1;
                 scoreElement.textContent = score;
+                
+                // 添加得分特效
+                scoreElement.parentElement.classList.add('highlight');
+                setTimeout(() => {
+                    scoreElement.parentElement.classList.remove('highlight');
+                }, 300);
+                
                 addBody();
                 createFood();
             }
@@ -566,7 +807,7 @@
                     head.top < 0 || 
                     head.top >= gameArea.offsetHeight
                 ) {
-                    endGame('撞墙了！游戏结束！');
+                    showGameOver('游戏结束', '撞墙了！游戏结束！');
                     clearInterval(checkInterval);
                     return;
                 }
@@ -574,7 +815,7 @@
                 // 检查是否撞到自己
                 for (let i = 1; i < snake_arr.length; i++) {
                     if (head.left === snake_arr[i].left && head.top === snake_arr[i].top) {
-                        endGame('咬到自己了！游戏结束！');
+                        showGameOver('游戏结束', '咬到自己了！游戏结束！');
                         clearInterval(checkInterval);
                         return;
                     }
@@ -582,13 +823,14 @@
             }, 100);
         }
 
-        // 结束游戏
-        function endGame(message) {
+        // 显示游戏结束遮罩
+        function showGameOver(title, message) {
             gameRunning = false;
             clearInterval(autoMove);
-            setTimeout(() => {
-                alert(message + ' 最终得分: ' + score);
-            }, 100);
+            
+            overlayTitle.textContent = title;
+            overlayMessage.textContent = message + ' 最终得分: ' + score;
+            gameOverlay.classList.add('active');
         }
 
         // 方向控制
@@ -648,8 +890,17 @@
             if (gameRunning) {
                 gamePaused = !gamePaused;
                 pauseBtn.textContent = gamePaused ? '继续' : '暂停';
+                
+                // 暂停/继续时显示提示
+                if (gamePaused) {
+                    showGameOver('游戏暂停', '点击继续按钮继续');
+                } else {
+                    gameOverlay.classList.remove('active');
+                }
             }
         });
+
+        overlayRestartBtn.addEventListener('click', initGame);
 
         // 初始化游戏
         initGame();

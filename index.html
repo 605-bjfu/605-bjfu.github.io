@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>七人关系网络图 - 使用人物图片</title>
+    <title>BJFU-605名片</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -19,6 +19,58 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #02ff52, #4c2dfd);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        
+        .loader-content {
+            text-align: center;
+        }
+        
+        .loader-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: white;
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        .loader-text {
+            font-size: 1.5rem;
+            animation: fadeInOut 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* 背景粒子 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
         
         /* 全局页眉样式 */
@@ -28,6 +80,12 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(-100%);
+            animation: slideDown 0.8s ease-out 0.5s forwards;
+        }
+        
+        @keyframes slideDown {
+            to { transform: translateY(0); }
         }
         
         .header-content {
@@ -50,6 +108,11 @@
             color: #bf00ff;
         }
         
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
         .logo-text {
             font-size: 1.8rem;
             font-weight: bold;
@@ -70,6 +133,23 @@
             transition: all 0.3s;
             padding: 10px;
             border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
         }
         
         .nav-link:hover {
@@ -95,6 +175,16 @@
             padding: 0 20px;
             gap: 20px;
             flex: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease-out 0.8s forwards;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .left-panel {
@@ -107,10 +197,23 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .left-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
         
         .right-panel {
             flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .low-panel {
+            flex: 2;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -123,6 +226,25 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 10000s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
         h1 {
@@ -144,6 +266,12 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .network-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
         }
         
         canvas {
@@ -184,17 +312,36 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 15px;
-            width: calc(50% - 10px);
+            width: calc(10% - 10px);
             text-align: center;
-            transition: transform 0.3s, background 0.3s;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
             cursor: pointer;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .person-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         
         .person-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px) scale(1.05);
             background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .person-card:hover::before {
+            opacity: 1;
         }
         
         .person-avatar {
@@ -204,17 +351,33 @@
             margin: 0 auto 10px;
             overflow: hidden;
             border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .person-card:hover .person-avatar {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.7);
         }
         
         .person-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .person-card:hover .person-avatar img {
+            transform: scale(1.2);
         }
         
         .person-name {
             font-weight: bold;
             margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        
+        .person-card:hover .person-name {
+            color: #fdbb2d;
         }
         
         .person-role {
@@ -232,6 +395,14 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .detail-panel.active {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .detail-header {
@@ -247,17 +418,39 @@
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.5s, border-color 0.5s;
+        }
+        
+        .detail-panel.active .detail-avatar {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
         }
         
         .detail-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .detail-panel:hover .detail-avatar img {
+            transform: scale(1.1);
         }
         
         .detail-info h2 {
             font-size: 1.8rem;
             margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        
+        .detail-panel:hover .detail-info h2 {
+            color: #fdbb2d;
         }
         
         .detail-info .role {
@@ -290,6 +483,12 @@
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .connection-tag:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
         }
         
         .instructions {
@@ -307,6 +506,12 @@
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: 20px;
+            transform: translateY(100%);
+            animation: slideUp 0.8s ease-out 1s forwards;
+        }
+        
+        @keyframes slideUp {
+            to { transform: translateY(0); }
         }
         
         .footer-content {
@@ -362,7 +567,7 @@
         
         .social-link:hover {
             background: #fdbb2d;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.1);
         }
         
         @media (max-width: 1024px) {
@@ -372,6 +577,10 @@
             
             .left-panel, .right-panel {
                 width: 100%;
+            }
+
+            .low-panel {
+                width: 20%;
             }
             
             .network-container {
@@ -385,7 +594,7 @@
         
         @media (max-width: 768px) {
             .person-card {
-                width: 100%;
+                width: 20%;
             }
             
             h1 {
@@ -405,6 +614,19 @@
     </style>
 </head>
 <body>
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="loader-text">正在加载605宿舍信息...</div>
+        </div>
+    </div>
+    
+    <!-- 背景粒子 -->
+    <div id="particles-js"></div>
+    
     <!-- 全局页眉 -->
     <header class="global-header">
         <div class="header-content">
@@ -412,7 +634,7 @@
                 <div class="logo-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="logo-text">团队关系网络</div>
+                <div class="logo-text">605</div>
             </div>
             <div class="nav-links">
                 <a href="https://605-bjfu.github.io/" class="nav-link">
@@ -421,7 +643,7 @@
                     </div>
                     <div class="nav-text">首页</div>
                 </a>
-                <a href="https://605-bjfu.github.io/" class="nav-link">
+                <a href="https://605-bjfu.github.io/sijianzhou" class="nav-link">
                     <div class="nav-icon">
                         <i class="fa fa-history"></i>
                     </div>
@@ -441,38 +663,39 @@
     <div class="container">
         <div class="left-panel">
             <header>
-                <h1>七人关系网络图</h1>
-                <p class="subtitle">点击节点查看详细信息，鼠标悬停查看简介</p>
+                <h1>北京林业大学605宿舍</h1>
+                <p class="subtitle">点击图像查看详细信息</p>
             </header>
             
-            <div class="detail-panel" id="detailPanel">
-                <div class="detail-header">
-                    <div class="detail-avatar" id="detailAvatar">
-                        <img id="detailAvatarImg" src="https://i.pravatar.cc/150?img=1" alt="张明">
+
+            <div id = "detailAvatar" >
+              <a id="detailLink" href="https://605-bjfu.github.io/xiaozhujian" class="nav-link">
+                <div class="detail-panel" id="detailPanel" >
+                    <div class="detail-header">
+                        <div class="detail-avatar">
+                            <img id="detailAvatarImg" src="https://i.pravatar.cc/150?img=1" alt="张明">
+                        </div>
+                        <div class="detail-info">
+                            <h2 id="detailName">石文泰</h2>
+                            <div class="role" id="detailRole">no</div>
+                        </div>
                     </div>
-                    <div class="detail-info">
-                        <h2 id="detailName">张明</h2>
-                        <div class="role" id="detailRole">项目负责人</div>
+                    <div class="detail-description" id="detailDescription">
+                        
+                    </div>
+                    <div class="connections">
+                        <h3>关联人员</h3>
+                        <div class="connection-list" id="connectionList">
+                        </div>
                     </div>
                 </div>
-                <div class="detail-description" id="detailDescription">
-                    拥有10年项目管理经验，擅长团队协作与资源调配，曾主导多个大型项目成功交付。精通敏捷开发方法，善于沟通协调，能够有效推动项目进展并确保高质量交付。
-                </div>
-                <div class="connections">
-                    <h3>关联人员</h3>
-                    <div class="connection-list" id="connectionList">
-                        <div class="connection-tag">李华</div>
-                        <div class="connection-tag">王芳</div>
-                        <div class="connection-tag">赵强</div>
-                    </div>
-                </div>
+              </a>
             </div>
+
             
-            <p class="instructions">点击上方节点或下方卡片可查看人物详细信息</p>
+            <p class="instructions">点击上方图片或下方卡片可查看详细信息</p>
             
-            <div class="person-list" id="personList">
-                <!-- 人物卡片将通过JavaScript动态生成 -->
-            </div>
+
         </div>
         
         <div class="right-panel">
@@ -480,6 +703,13 @@
                 <canvas id="networkCanvas"></canvas>
                 <div class="tooltip" id="tooltip"></div>
             </div>
+        </div>
+
+        </div class="low-panel">
+            <div class="person-list" id="personList">
+                <!-- 人物卡片将通过JavaScript动态生成 -->
+            </div>    
+        
         </div>
     </div>
     
@@ -493,75 +723,122 @@
                 </a>
             </div>
             <div class="footer-text">
-                <p>© 2025 团队关系网络图 | 交互式关系网络展示系统</p>
+                <p>© 2025 605 | 北京林业大学2025级宿舍</p>
             </div>
         </div>
     </footer>
 
+    <!-- 引入粒子库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script>
+        // 页面加载完成后执行
+        window.addEventListener('load', function() {
+            // 隐藏加载动画
+            setTimeout(function() {
+                document.getElementById('loader').style.opacity = '0';
+                document.getElementById('loader').style.visibility = 'hidden';
+            }, 1500);
+            
+            // 初始化粒子背景
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                }
+            });
+        });
+
         // 人物数据 - 添加图片URL
         const people = [
             {
                 id: 1,
-                name: "张明",
-                role: "项目负责人",
-                description: "拥有10年项目管理经验，擅长团队协作与资源调配，曾主导多个大型项目成功交付。精通敏捷开发方法，善于沟通协调，能够有效推动项目进展并确保高质量交付。",
+                name: "石文泰",
+                role: "宿舍员",
+                description: "",
                 color: "#FF6B6B",
-                link: "#zhangming",
+                link: "#archer",
                 image: "https://i.pravatar.cc/150?img=1"
             },
             {
                 id: 2,
-                name: "李华",
-                role: "技术专家",
-                description: "资深全栈工程师，精通多种编程语言和框架，对系统架构有深入研究。擅长解决复杂技术问题，在性能优化和系统安全方面有丰富经验。",
+                name: "王跃川",
+                role: "宿舍员",
+                description: "",
                 color: "#4ECDC4",
-                link: "#lihua",
+                link: "#rider",
                 image: "https://i.pravatar.cc/150?img=2"
             },
             {
                 id: 3,
-                name: "王芳",
-                role: "设计师",
-                description: "UI/UX设计师，注重用户体验与视觉美感，曾获多个设计奖项。擅长用户研究和交互设计，能够将复杂需求转化为直观易用的界面。",
+                name: "王脉鹏",
+                role: "宿舍员",
+                description: "",
                 color: "#FFD166",
-                link: "#wangfang",
+                link: "#saber",
                 image: "https://i.pravatar.cc/150?img=3"
             },
             {
                 id: 4,
-                name: "赵强",
-                role: "市场总监",
-                description: "市场营销专家，擅长品牌策划与市场拓展，拥有广泛的行业资源。精通数字营销策略，曾成功主导多个品牌从零到一的市场建设。",
+                name: "李凯",
+                role: "宿舍员",
+                description: "",
                 color: "#6A0572",
-                link: "#zhaoqiang",
+                link: "#caster",
                 image: "https://i.pravatar.cc/150?img=4"
             },
             {
                 id: 5,
-                name: "刘洋",
-                role: "数据分析师",
-                description: "数据科学家，精通机器学习与统计分析，擅长从数据中挖掘商业价值。具备丰富的数据可视化经验，能够将复杂数据转化为直观洞察。",
+                name: "李王涵",
+                role: "宿舍长",
+                description: "",
                 color: "#1A936F",
-                link: "#liuyang",
+                link: "#assassin",
                 image: "https://i.pravatar.cc/150?img=5"
             },
             {
                 id: 6,
-                name: "陈静",
-                role: "运营经理",
-                description: "运营管理专家，擅长用户增长与社区运营，有丰富的产品运营经验。精通A/B测试和转化率优化，能够有效提升产品用户活跃度。",
+                name: "季丰惟",
+                role: "宿舍员",
+                description: "",
                 color: "#118AB2",
-                link: "#chenjing",
+                link: "#lancer",
                 image: "https://i.pravatar.cc/150?img=6"
             },
             {
                 id: 7,
-                name: "杨超",
-                role: "产品经理",
-                description: "产品战略规划师，擅长需求分析与产品设计，对市场趋势有敏锐洞察力。精通产品生命周期管理，能够协调多方资源推动产品迭代。",
+                name: "田宇洁",
+                role: "宿舍员",
+                description: "",
                 color: "#EF476F",
-                link: "#yangchao",
+                link: "#berserker",
                 image: "https://i.pravatar.cc/150?img=7"
             }
         ];
@@ -603,6 +880,14 @@
         const detailRole = document.getElementById('detailRole');
         const detailDescription = document.getElementById('detailDescription');
         const connectionList = document.getElementById('connectionList');
+        const detailLink = document.getElementById('detailLink');
+
+        // 添加节点动画属性
+        people.forEach(person => {
+            person.angleOffset = Math.random() * Math.PI * 2;
+            person.floatSpeed = 0.5 + Math.random() * 0.5;
+            person.floatRadius = 5 + Math.random() * 10;
+        });
 
         // 预加载图片
         const imagePromises = people.map(person => {
@@ -619,13 +904,18 @@
 
         // 设置Canvas尺寸
         function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            canvas.width = canvas.offsetWidth/1.1;
+            canvas.height = canvas.offsetHeight/1.1;
             drawNetwork();
         }
 
         // 绘制网络图
+        let animationFrameId;
+        let time = 0;
+        
         function drawNetwork() {
+            time += 0.02;
+            
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             // 计算节点位置（圆形布局）
@@ -634,7 +924,7 @@
             const radius = Math.min(canvas.width, canvas.height) * 0.35;
             
             // 绘制连接线
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.strokeStyle = 'rgba(255, 120, 255, 0.8)';
             ctx.lineWidth = 2;
             
             connections.forEach(conn => {
@@ -642,26 +932,40 @@
                 const target = people.find(p => p.id === conn.target);
                 
                 if (source && target) {
+                    // 计算浮动位置
                     const sourceAngle = (source.id - 1) * (2 * Math.PI / people.length);
                     const targetAngle = (target.id - 1) * (2 * Math.PI / people.length);
                     
-                    const sourceX = centerX + radius * Math.cos(sourceAngle);
-                    const sourceY = centerY + radius * Math.sin(sourceAngle);
-                    const targetX = centerX + radius * Math.cos(targetAngle);
-                    const targetY = centerY + radius * Math.sin(targetAngle);
+                    const sourceFloatX = source.floatRadius * Math.cos(time * source.floatSpeed + source.angleOffset);
+                    const sourceFloatY = source.floatRadius * Math.sin(time * source.floatSpeed + source.angleOffset);
+                    const targetFloatX = target.floatRadius * Math.cos(time * target.floatSpeed + target.angleOffset);
+                    const targetFloatY = target.floatRadius * Math.sin(time * target.floatSpeed + target.angleOffset);
                     
+                    const sourceX = centerX + radius * Math.cos(sourceAngle) + sourceFloatX/5;
+                    const sourceY = centerY + radius * Math.sin(sourceAngle) + sourceFloatY/5;
+                    const targetX = centerX + radius * Math.cos(targetAngle) + targetFloatX/5;
+                    const targetY = centerY + radius * Math.sin(targetAngle) + targetFloatY/5;
+                    
+                    // 绘制连线
                     ctx.beginPath();
                     ctx.moveTo(sourceX, sourceY);
                     ctx.lineTo(targetX, targetY);
                     ctx.stroke();
+                    
+
                 }
             });
             
             // 绘制节点
             people.forEach(person => {
                 const angle = (person.id - 1) * (2 * Math.PI / people.length);
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
+                
+                // 计算浮动位置
+                const floatX = person.floatRadius * Math.cos(time * person.floatSpeed + person.angleOffset)/5;
+                const floatY = person.floatRadius * Math.sin(time * person.floatSpeed + person.angleOffset)/5;
+                
+                const x = centerX + radius * Math.cos(angle) + floatX;
+                const y = centerY + radius * Math.sin(angle) + floatY;
                 
                 // 保存节点位置用于交互检测
                 person.x = x;
@@ -705,10 +1009,13 @@
                 // 绘制节点边框
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, Math.PI * 2);
-                ctx.strokeStyle = 'white';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
             });
+            
+            // 继续动画循环
+            animationFrameId = requestAnimationFrame(drawNetwork);
         }
 
         // 检测鼠标位置是否在节点上
@@ -716,41 +1023,51 @@
             return people.find(person => {
                 const dx = person.x - x;
                 const dy = person.y - y;
-                return Math.sqrt(dx * dx + dy * dy) < 20;
+                return Math.sqrt(dx * dx + dy * dy) < 60;
             });
         }
 
         // 更新详细信息面板
         function updateDetailPanel(person) {
-            detailAvatar.src = person.image;
-            detailAvatar.alt = person.name;
-            detailName.textContent = person.name;
-            detailRole.textContent = person.role;
-            detailDescription.textContent = person.description;
+            // 先隐藏面板
+            detailPanel.classList.remove('active');
             
-            // 更新关联人员
-            const relatedConnections = connections.filter(conn => 
-                conn.source === person.id || conn.target === person.id
-            );
-            
-            const relatedPeople = new Set();
-            relatedConnections.forEach(conn => {
-                if (conn.source === person.id) {
-                    const targetPerson = people.find(p => p.id === conn.target);
-                    if (targetPerson) relatedPeople.add(targetPerson.name);
-                } else {
-                    const sourcePerson = people.find(p => p.id === conn.source);
-                    if (sourcePerson) relatedPeople.add(sourcePerson.name);
-                }
-            });
-            
-            connectionList.innerHTML = '';
-            relatedPeople.forEach(name => {
-                const tag = document.createElement('div');
-                tag.className = 'connection-tag';
-                tag.textContent = name;
-                connectionList.appendChild(tag);
-            });
+            // 短暂延迟后更新内容并显示
+            setTimeout(() => {
+                detailAvatar.src = person.image;
+                detailAvatar.alt = person.name;
+                detailLink.href = person.link;
+                detailName.textContent = person.name;
+                detailRole.textContent = person.role;
+                detailDescription.textContent = person.description;
+                
+                // 更新关联人员
+                const relatedConnections = connections.filter(conn => 
+                    conn.source === person.id || conn.target === person.id
+                );
+                
+                const relatedPeople = new Set();
+                relatedConnections.forEach(conn => {
+                    if (conn.source === person.id) {
+                        const targetPerson = people.find(p => p.id === conn.target);
+                        if (targetPerson) relatedPeople.add(targetPerson.name);
+                    } else {
+                        const sourcePerson = people.find(p => p.id === conn.source);
+                        if (sourcePerson) relatedPeople.add(sourcePerson.name);
+                    }
+                });
+                
+                connectionList.innerHTML = '';
+                relatedPeople.forEach(name => {
+                    const tag = document.createElement('div');
+                    tag.className = 'connection-tag';
+                    tag.textContent = name;
+                    connectionList.appendChild(tag);
+                });
+                
+                // 显示面板
+                detailPanel.classList.add('active');
+            }, 300);
         }
 
         // 处理Canvas鼠标移动事件
@@ -763,17 +1080,16 @@
             
             if (person) {
                 canvas.style.cursor = 'pointer';
+                tooltip.style.opacity = '1';
+                tooltip.style.left = (e.clientX + 15) + 'px';
+                tooltip.style.top = (e.clientY + 15) + 'px';
                 tooltip.innerHTML = `
                     <h3>${person.name}</h3>
-                    <p><strong>职位:</strong> ${person.role}</p>
-                    <p>${person.description}</p>
+                    <p>${person.role}</p>
                 `;
-                tooltip.style.opacity = 1;
-                tooltip.style.left = (e.pageX + 15) + 'px';
-                tooltip.style.top = (e.pageY - 15) + 'px';
             } else {
                 canvas.style.cursor = 'default';
-                tooltip.style.opacity = 0;
+                tooltip.style.opacity = '0';
             }
         });
 
@@ -787,8 +1103,6 @@
             
             if (person) {
                 updateDetailPanel(person);
-                // 在实际应用中，这里应该跳转到对应的个人介绍页面
-                // window.location.href = person.link;
             }
         });
 
@@ -796,9 +1110,10 @@
         function generatePersonCards() {
             personList.innerHTML = '';
             
-            people.forEach(person => {
+            people.forEach((person, index) => {
                 const card = document.createElement('div');
                 card.className = 'person-card';
+                card.style.animationDelay = `${index * 0.1}s`;
                 card.innerHTML = `
                     <div class="person-avatar">
                         <img src="${person.image}" alt="${person.name}">
@@ -809,8 +1124,6 @@
                 
                 card.addEventListener('click', () => {
                     updateDetailPanel(person);
-                    // 在实际应用中，这里应该跳转到对应的个人介绍页面
-                    // window.location.href = person.link;
                 });
                 
                 personList.appendChild(card);
@@ -822,15 +1135,24 @@
             resizeCanvas();
             generatePersonCards();
             // 默认显示第一个人物的详细信息
-            updateDetailPanel(people[0]);
+            setTimeout(() => {
+                updateDetailPanel(people[0]);
+            }, 1000);
         }).catch(error => {
             console.error('图片加载失败:', error);
             resizeCanvas();
             generatePersonCards();
-            updateDetailPanel(people[0]);
+            setTimeout(() => {
+                updateDetailPanel(people[0]);
+            }, 1000);
         });
         
         window.addEventListener('resize', resizeCanvas);
+        
+        // 页面卸载时停止动画
+        window.addEventListener('beforeunload', () => {
+            cancelAnimationFrame(animationFrameId);
+        });
     </script>
 </body>
 </html>
