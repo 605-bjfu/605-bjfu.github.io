@@ -6,14 +6,16 @@
     <title>BJFU-605名片</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
+        * 
+        {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
-        body {
+        body 
+        {
             background: linear-gradient(135deg, #02ff52, #4c2dfd);
             color: white;
             min-height: 100vh;
@@ -23,7 +25,8 @@
         }
         
         /* 加载动画 */
-        .loader {
+        .loader 
+        {
             position: fixed;
             top: 0;
             left: 0;
@@ -37,34 +40,40 @@
             transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
         }
         
-        .loader-content {
+        .loader-content 
+        {
             text-align: center;
         }
         
-        .loader-logo {
+        .loader-logo 
+        {
             font-size: 4rem;
             margin-bottom: 20px;
             color: white;
             animation: pulse 1.5s infinite alternate;
         }
         
-        .loader-text {
+        .loader-text 
+        {
             font-size: 1.5rem;
             animation: fadeInOut 2s infinite;
         }
         
-        @keyframes pulse {
+        @keyframes pulse 
+        {
             0% { transform: scale(1); }
             100% { transform: scale(1.1); }
         }
         
-        @keyframes fadeInOut {
+        @keyframes fadeInOut 
+        {
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
         
         /* 背景粒子 */
-        #particles-js {
+        #particles-js 
+        {
             position: fixed;
             width: 100%;
             height: 100%;
@@ -74,7 +83,8 @@
         }
         
         /* 全局页眉样式 */
-        .global-header {
+        .global-header 
+        {
             background: rgba(0, 0, 0, 0.5);
             padding: 15px 0;
             backdrop-filter: blur(10px);
@@ -84,11 +94,13 @@
             animation: slideDown 0.8s ease-out 0.5s forwards;
         }
         
-        @keyframes slideDown {
+        @keyframes slideDown 
+        {
             to { transform: translateY(0); }
         }
         
-        .header-content {
+        .header-content 
+        {
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
@@ -97,33 +109,39 @@
             padding: 0 20px;
         }
         
-        .logo {
+        .logo 
+        {
             display: flex;
             align-items: center;
             gap: 15px;
         }
         
-        .logo-icon {
+        .logo-icon 
+        {
             font-size: 2.5rem;
             color: #bf00ff;
         }
         
-        @keyframes rotate {
+        @keyframes rotate 
+        {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
         
-        .logo-text {
+        .logo-text 
+        {
             font-size: 1.8rem;
             font-weight: bold;
         }
         
-        .nav-links {
+        .nav-links 
+        {
             display: flex;
             gap: 30px;
         }
         
-        .nav-link {
+        .nav-link 
+        {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -137,7 +155,8 @@
             overflow: hidden;
         }
         
-        .nav-link::before {
+        .nav-link::before 
+        {
             content: '';
             position: absolute;
             top: 0;
@@ -148,26 +167,31 @@
             transition: left 0.5s;
         }
         
-        .nav-link:hover::before {
+        .nav-link:hover::before 
+        {
             left: 100%;
         }
         
-        .nav-link:hover {
+        .nav-link:hover 
+        {
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-3px);
         }
         
-        .nav-icon {
+        .nav-icon 
+        {
             font-size: 1.5rem;
             color: #fd2dd3;
         }
         
-        .nav-text {
+        .nav-text 
+        {
             font-size: 0.9rem;
         }
         
         /* 主内容区域 */
-        .container {
+        .container 
+        {
             display: flex;
             width: 100%;
             max-width: 1400px;
@@ -180,14 +204,16 @@
             animation: fadeUp 0.8s ease-out 0.8s forwards;
         }
         
-        @keyframes fadeUp {
+        @keyframes fadeUp 
+        {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
         
-        .left-panel {
+        .left-panel 
+        {
             flex: 1;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
@@ -200,26 +226,30 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
         
-        .left-panel:hover {
+        .left-panel:hover 
+        {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
         
-        .right-panel {
+        .right-panel 
+        {
             flex: 1.5;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .low-panel {
+        .low-panel 
+        {
             flex: 2;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
         
-        header {
+        header 
+        {
             text-align: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
@@ -230,7 +260,8 @@
             overflow: hidden;
         }
         
-        header::after {
+        header::after 
+        {
             content: '';
             position: absolute;
             top: -50%;
@@ -242,23 +273,27 @@
             animation: shimmer 10000s infinite linear;
         }
         
-        @keyframes shimmer {
+        @keyframes shimmer 
+        {
             0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
             100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
-        h1 {
+        h1 
+        {
             font-size: 2.2rem;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
-        .subtitle {
+        .subtitle 
+        {
             font-size: 1.1rem;
             opacity: 0.9;
         }
         
-        .network-container {
+        .network-container 
+        {
             position: relative;
             width: 100%;
             height: 500px;
@@ -269,18 +304,21 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
         
-        .network-container:hover {
+        .network-container:hover 
+        {
             transform: translateY(-5px);
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
         }
         
-        canvas {
+        canvas 
+        {
             display: block;
             width: 100%;
             height: 100%;
         }
         
-        .tooltip {
+        .tooltip 
+        {
             position: absolute;
             background: rgba(0, 0, 0, 0.85);
             color: white;
@@ -296,19 +334,22 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .tooltip h3 {
+        .tooltip h3 
+        {
             margin-bottom: 8px;
             color: #d0ff00;
         }
         
-        .person-list {
+        .person-list 
+        {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
         }
         
-        .person-card {
+        .person-card 
+        {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 15px;
@@ -322,7 +363,8 @@
             overflow: hidden;
         }
         
-        .person-card::before {
+        .person-card::before 
+        {
             content: '';
             position: absolute;
             top: 0;
@@ -334,17 +376,20 @@
             transition: opacity 0.3s;
         }
         
-        .person-card:hover {
+        .person-card:hover 
+        {
             transform: translateY(-10px) scale(1.05);
             background: rgba(255, 255, 255, 0.2);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
         
-        .person-card:hover::before {
+        .person-card:hover::before 
+        {
             opacity: 1;
         }
         
-        .person-avatar {
+        .person-avatar 
+        {
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -354,38 +399,45 @@
             transition: transform 0.3s, border-color 0.3s;
         }
         
-        .person-card:hover .person-avatar {
+        .person-card:hover .person-avatar 
+        {
             transform: scale(1.1);
             border-color: rgba(255, 255, 255, 0.7);
         }
         
-        .person-avatar img {
+        .person-avatar img 
+        {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
         
-        .person-card:hover .person-avatar img {
+        .person-card:hover .person-avatar img 
+        {
             transform: scale(1.2);
         }
         
-        .person-name {
+        .person-name 
+        {
             font-weight: bold;
             margin-bottom: 5px;
             transition: color 0.3s;
         }
         
-        .person-card:hover .person-name {
+        .person-card:hover .person-name 
+        {
             color: #fdbb2d;
         }
         
-        .person-role {
+        .person-role 
+        {
             font-size: 0.85rem;
             opacity: 0.8;
         }
         
-        .detail-panel {
+        .detail-panel 
+        {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             padding: 25px;
@@ -400,19 +452,22 @@
             transform: translateY(20px);
         }
         
-        .detail-panel.active {
+        .detail-panel.active 
+        {
             opacity: 1;
             transform: translateY(0);
         }
         
-        .detail-header {
+        .detail-header 
+        {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-bottom: 15px;
         }
         
-        .detail-avatar {
+        .detail-avatar 
+        {
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -421,64 +476,76 @@
             transition: transform 0.5s, border-color 0.5s;
         }
         
-        .detail-panel.active .detail-avatar {
+        .detail-panel.active .detail-avatar 
+        {
             animation: bounceIn 0.6s ease-out;
         }
         
-        @keyframes bounceIn {
+        @keyframes bounceIn 
+        {
             0% { transform: scale(0.3); opacity: 0; }
             50% { transform: scale(1.05); }
             70% { transform: scale(0.9); }
             100% { transform: scale(1); opacity: 1; }
         }
         
-        .detail-avatar img {
+        .detail-avatar img 
+        {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
         
-        .detail-panel:hover .detail-avatar img {
+        .detail-panel:hover .detail-avatar img 
+        {
             transform: scale(1.1);
         }
         
-        .detail-info h2 {
+        .detail-info h2 
+        {
             font-size: 1.8rem;
             margin-bottom: 5px;
             transition: color 0.3s;
         }
         
-        .detail-panel:hover .detail-info h2 {
+        .detail-panel:hover .detail-info h2 
+        {
             color: #fdbb2d;
         }
         
-        .detail-info .role {
+        .detail-info .role 
+        {
             font-size: 1.1rem;
             opacity: 0.9;
         }
         
-        .detail-description {
+        .detail-description 
+        {
             line-height: 1.6;
             opacity: 0.9;
         }
         
-        .connections {
+        .connections 
+        {
             margin-top: 15px;
         }
         
-        .connections h3 {
+        .connections h3 
+        {
             margin-bottom: 10px;
             color: #fdbb2d;
         }
         
-        .connection-list {
+        .connection-list 
+        {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
         
-        .connection-tag {
+        .connection-tag 
+        {
             background: rgba(255, 255, 255, 0.2);
             padding: 5px 12px;
             border-radius: 20px;
@@ -486,12 +553,14 @@
             transition: all 0.3s;
         }
         
-        .connection-tag:hover {
+        .connection-tag:hover 
+        {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-3px);
         }
         
-        .instructions {
+        .instructions 
+        {
             text-align: center;
             margin-top: 10px;
             font-size: 1rem;
@@ -499,7 +568,8 @@
         }
         
         /* 全局页脚样式 */
-        .global-footer {
+        .global-footer 
+        {
             background: rgba(0, 0, 0, 0.5);
             padding: 25px 0;
             backdrop-filter: blur(10px);
@@ -510,11 +580,13 @@
             animation: slideUp 0.8s ease-out 1s forwards;
         }
         
-        @keyframes slideUp {
+        @keyframes slideUp 
+        {
             to { transform: translateY(0); }
         }
         
-        .footer-content {
+        .footer-content 
+        {
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
@@ -524,35 +596,41 @@
             padding: 0 20px;
         }
         
-        .footer-links {
+        .footer-links 
+        {
             display: flex;
             gap: 30px;
             margin-bottom: 10px;
         }
         
-        .footer-link {
+        .footer-link 
+        {
             color: white;
             text-decoration: none;
             transition: color 0.3s;
         }
         
-        .footer-link:hover {
+        .footer-link:hover 
+        {
             color: #fdbb2d;
         }
         
-        .footer-text {
+        .footer-text 
+        {
             text-align: center;
             opacity: 0.7;
             font-size: 0.9rem;
         }
         
-        .social-links {
+        .social-links 
+        {
             display: flex;
             gap: 20px;
             margin-top: 10px;
         }
         
-        .social-link {
+        .social-link 
+        {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -565,48 +643,60 @@
             transition: all 0.3s;
         }
         
-        .social-link:hover {
+        .social-link:hover 
+        {
             background: #fdbb2d;
             transform: translateY(-3px) scale(1.1);
         }
         
-        @media (max-width: 1024px) {
-            .container {
+        @media (max-width: 1024px) 
+        {
+            .container 
+            {
                 flex-direction: column;
             }
             
-            .left-panel, .right-panel {
+            .left-panel, .right-panel 
+            {
                 width: 100%;
             }
 
-            .low-panel {
+            .low-panel 
+            {
                 width: 20%;
             }
             
-            .network-container {
+            .network-container 
+            {
                 height: 400px;
             }
             
-            .nav-links {
+            .nav-links 
+            {
                 gap: 15px;
             }
         }
         
-        @media (max-width: 768px) {
-            .person-card {
+        @media (max-width: 768px) 
+        {
+            .person-card 
+            {
                 width: 20%;
             }
             
-            h1 {
+            h1 
+            {
                 font-size: 1.8rem;
             }
             
-            .header-content {
+            .header-content 
+            {
                 flex-direction: column;
                 gap: 15px;
             }
             
-            .nav-links {
+            .nav-links 
+            {
                 flex-wrap: wrap;
                 justify-content: center;
             }
@@ -673,11 +763,11 @@
                 <div class="detail-panel" id="detailPanel" >
                     <div class="detail-header">
                         <div class="detail-avatar">
-                            <img id="detailAvatarImg" src="https://i.pravatar.cc/150?img=1" alt="张明">
+                            <img id="detailAvatarImg" src="https://i.pravatar.cc/150?img=1" alt="石文泰">
                         </div>
                         <div class="detail-info">
                             <h2 id="detailName">石文泰</h2>
-                            <div class="role" id="detailRole">no</div>
+                            <div class="role" id="detailRole">宿舍员</div>
                         </div>
                     </div>
                     <div class="detail-description" id="detailDescription">
@@ -733,29 +823,31 @@
     
     <script>
         // 页面加载完成后执行
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function() 
+        {
             // 隐藏加载动画
-            setTimeout(function() {
-                document.getElementById('loader').style.opacity = '0';
-                document.getElementById('loader').style.visibility = 'hidden';
-            }, 1500);
+            setTimeout(function() {document.getElementById('loader').style.opacity = '0';document.getElementById('loader').style.visibility = 'hidden';}, 1500);
             
             // 初始化粒子背景
-            particlesJS('particles-js', {
-                particles: {
+            particlesJS('particles-js', 
+            {
+                particles: 
+                {
                     number: { value: 80, density: { enable: true, value_area: 800 } },
                     color: { value: "#ffffff" },
                     shape: { type: "circle" },
                     opacity: { value: 0.5, random: true },
                     size: { value: 3, random: true },
-                    line_linked: {
+                    line_linked: 
+                    {
                         enable: true,
                         distance: 150,
                         color: "#ffffff",
                         opacity: 0.4,
                         width: 1
                     },
-                    move: {
+                    move:   
+                    {
                         enable: true,
                         speed: 2,
                         direction: "none",
@@ -765,9 +857,12 @@
                         bounce: false
                     }
                 },
-                interactivity: {
+
+                interactivity: 
+                {
                     detect_on: "canvas",
-                    events: {
+                    events:
+                    {
                         onhover: { enable: true, mode: "repulse" },
                         onclick: { enable: true, mode: "push" },
                         resize: true
@@ -777,7 +872,8 @@
         });
 
         // 人物数据 - 添加图片URL
-        const people = [
+        const people = 
+        [
             {
                 id: 1,
                 name: "石文泰",
@@ -844,7 +940,8 @@
         ];
 
         // 连接关系数据
-        const connections = [
+        const connections = 
+        [
             { source: 1, target: 2 },
             { source: 1, target: 3 },
             { source: 1, target: 4 },
@@ -883,15 +980,19 @@
         const detailLink = document.getElementById('detailLink');
 
         // 添加节点动画属性
-        people.forEach(person => {
+        people.forEach(person => 
+        {
             person.angleOffset = Math.random() * Math.PI * 2;
             person.floatSpeed = 0.5 + Math.random() * 0.5;
             person.floatRadius = 5 + Math.random() * 10;
-        });
+        }
+        );
 
         // 预加载图片
-        const imagePromises = people.map(person => {
-            return new Promise((resolve, reject) => {
+        const imagePromises = people.map(person => 
+        {
+            return new Promise((resolve, reject) => 
+            {
                 const img = new Image();
                 img.onload = () => {
                     person.img = img;
@@ -903,7 +1004,8 @@
         });
 
         // 设置Canvas尺寸
-        function resizeCanvas() {
+        function resizeCanvas() 
+        {
             canvas.width = canvas.offsetWidth/1.1;
             canvas.height = canvas.offsetHeight/1.1;
             drawNetwork();
@@ -913,7 +1015,8 @@
         let animationFrameId;
         let time = 0;
         
-        function drawNetwork() {
+        function drawNetwork() 
+        {
             time += 0.02;
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -927,11 +1030,13 @@
             ctx.strokeStyle = 'rgba(255, 120, 255, 0.8)';
             ctx.lineWidth = 2;
             
-            connections.forEach(conn => {
+            connections.forEach(conn => 
+            {
                 const source = people.find(p => p.id === conn.source);
                 const target = people.find(p => p.id === conn.target);
                 
-                if (source && target) {
+                if (source && target) 
+                {
                     // 计算浮动位置
                     const sourceAngle = (source.id - 1) * (2 * Math.PI / people.length);
                     const targetAngle = (target.id - 1) * (2 * Math.PI / people.length);
@@ -957,7 +1062,8 @@
             });
             
             // 绘制节点
-            people.forEach(person => {
+            people.forEach(person => 
+            {
                 const angle = (person.id - 1) * (2 * Math.PI / people.length);
                 
                 // 计算浮动位置
@@ -982,7 +1088,8 @@
                 ctx.fill();
                 
                 // 绘制节点图片
-                if (person.img) {
+                if (person.img) 
+                {
                     ctx.save();
                     ctx.beginPath();
                     ctx.arc(x, y, 20, 0, Math.PI * 2);
@@ -991,7 +1098,8 @@
                     
                     ctx.drawImage(person.img, x - 20, y - 20, 40, 40);
                     ctx.restore();
-                } else {
+                } else 
+                {
                     // 备用：绘制纯色节点
                     ctx.beginPath();
                     ctx.arc(x, y, 20, 0, Math.PI * 2);
@@ -1019,8 +1127,10 @@
         }
 
         // 检测鼠标位置是否在节点上
-        function getNodeAtPosition(x, y) {
-            return people.find(person => {
+        function getNodeAtPosition(x, y) 
+        {
+            return people.find(person => 
+            {
                 const dx = person.x - x;
                 const dy = person.y - y;
                 return Math.sqrt(dx * dx + dy * dy) < 60;
@@ -1028,12 +1138,14 @@
         }
 
         // 更新详细信息面板
-        function updateDetailPanel(person) {
+        function updateDetailPanel(person) 
+        {
             // 先隐藏面板
             detailPanel.classList.remove('active');
             
             // 短暂延迟后更新内容并显示
-            setTimeout(() => {
+            setTimeout(() => 
+            {
                 detailAvatar.src = person.image;
                 detailAvatar.alt = person.name;
                 detailLink.href = person.link;
@@ -1047,8 +1159,10 @@
                 );
                 
                 const relatedPeople = new Set();
-                relatedConnections.forEach(conn => {
-                    if (conn.source === person.id) {
+                relatedConnections.forEach(conn => 
+                {
+                    if (conn.source === person.id) 
+                    {
                         const targetPerson = people.find(p => p.id === conn.target);
                         if (targetPerson) relatedPeople.add(targetPerson.name);
                     } else {
@@ -1058,7 +1172,8 @@
                 });
                 
                 connectionList.innerHTML = '';
-                relatedPeople.forEach(name => {
+                relatedPeople.forEach(name => 
+                {
                     const tag = document.createElement('div');
                     tag.className = 'connection-tag';
                     tag.textContent = name;
@@ -1071,14 +1186,16 @@
         }
 
         // 处理Canvas鼠标移动事件
-        canvas.addEventListener('mousemove', (e) => {
+        canvas.addEventListener('mousemove', (e) => 
+        {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
             const person = getNodeAtPosition(x, y);
             
-            if (person) {
+            if (person) 
+            {
                 canvas.style.cursor = 'pointer';
                 tooltip.style.opacity = '1';
                 tooltip.style.left = (e.clientX + 15) + 'px';
@@ -1094,23 +1211,27 @@
         });
 
         // 处理Canvas点击事件
-        canvas.addEventListener('click', (e) => {
+        canvas.addEventListener('click', (e) => 
+        {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
             const person = getNodeAtPosition(x, y);
             
-            if (person) {
+            if (person) 
+            {
                 updateDetailPanel(person);
             }
         });
 
         // 生成人物卡片
-        function generatePersonCards() {
+        function generatePersonCards() 
+        {
             personList.innerHTML = '';
             
-            people.forEach((person, index) => {
+            people.forEach((person, index) => 
+            {
                 const card = document.createElement('div');
                 card.className = 'person-card';
                 card.style.animationDelay = `${index * 0.1}s`;
@@ -1122,7 +1243,8 @@
                     <div class="person-role">${person.role}</div>
                 `;
                 
-                card.addEventListener('click', () => {
+                card.addEventListener('click', () => 
+                {
                     updateDetailPanel(person);
                 });
                 
@@ -1131,14 +1253,16 @@
         }
 
         // 初始化
-        Promise.all(imagePromises).then(() => {
+        Promise.all(imagePromises).then(() => 
+        {
             resizeCanvas();
             generatePersonCards();
             // 默认显示第一个人物的详细信息
             setTimeout(() => {
                 updateDetailPanel(people[0]);
             }, 1000);
-        }).catch(error => {
+        }).catch(error => 
+        {
             console.error('图片加载失败:', error);
             resizeCanvas();
             generatePersonCards();
@@ -1150,7 +1274,8 @@
         window.addEventListener('resize', resizeCanvas);
         
         // 页面卸载时停止动画
-        window.addEventListener('beforeunload', () => {
+        window.addEventListener('beforeunload', () => 
+        {
             cancelAnimationFrame(animationFrameId);
         });
     </script>
